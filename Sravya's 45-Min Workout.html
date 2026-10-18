@@ -1,0 +1,326 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Sravya's 45-Min Workout</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: day tabs on top, timeline strip of the 45 min, then one card per exercise with figure + sets/reps/rest; sticky rest timer at bottom */
+:root{
+  --bg:#F2F4F1; --surface:#FFFFFF; --fg:#1D2420; --muted:#66706A; --line:#DCE2DC;
+  --accent:#7B3B6C; --accent-soft:#F1E4EE; --sage:#3E7A5C; --sage-soft:#E2EFE7; --prop:#C9D1CB;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141816; --surface:#1D2320; --fg:#E8EDE9; --muted:#9AA59F; --line:#2E3632;
+  --accent:#D88BC4; --accent-soft:#3A2535; --sage:#7FC4A0; --sage-soft:#203229; --prop:#3A4440; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141816; --surface:#1D2320; --fg:#E8EDE9; --muted:#9AA59F; --line:#2E3632;
+  --accent:#D88BC4; --accent-soft:#3A2535; --sage:#7FC4A0; --sage-soft:#203229; --prop:#3A4440; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45;padding:0 16px 110px}
+.wrap{max-width:760px;margin:0 auto;padding-block:20px}
+h1{font-family:var(--display);font-weight:700;font-size:2.3rem;line-height:1;margin:0 0 4px;letter-spacing:.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 18px}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.tab{min-width:0;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:8px 6px;font:600 .85rem var(--body);cursor:pointer;text-align:center}
+.tab small{display:block;font-weight:500;color:var(--muted);font-size:.68rem;line-height:1.2}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.tab[aria-selected="true"] small{color:var(--surface);opacity:.85}
+.tab:focus-visible,.set:focus-visible,button:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
+.timeline{display:flex;height:34px;border-radius:8px;overflow:hidden;margin:18px 0 6px;font:600 .72rem var(--body)}
+.timeline div{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;padding:0 2px}
+.t-warm,.t-stretch{background:var(--line);color:var(--fg)}
+.t-str{background:var(--accent);color:var(--surface)}
+.t-car{background:var(--sage);color:var(--surface)}
+.tl-note{position:relative;height:16px;color:var(--muted);font-size:.75rem;margin-bottom:18px;font-variant-numeric:tabular-nums}.tl-note span{position:absolute;top:0;transform:translateX(-50%)}.tl-note span:first-child{transform:none}.tl-note span:last-child{transform:translateX(-100%)}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
+.rule{background:var(--surface);border-radius:10px;padding:10px;border:1px solid var(--line)}
+.rule b{display:block;font-family:var(--display);font-size:1.35rem;line-height:1.1;color:var(--accent)}
+.rule span{font-size:.75rem;color:var(--muted)}
+h2{font-family:var(--display);font-size:1.5rem;margin:6px 0 10px;letter-spacing:.02em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h2 em{font-style:normal;font-family:var(--body);font-size:.78rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:500}
+.list{display:grid;gap:10px;margin-bottom:24px}
+.ex{display:grid;grid-template-columns:112px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px}
+.ex svg{width:112px;height:84px;background:var(--bg);border-radius:8px}
+.ex-body{min-width:0}
+.ex h3{margin:0;font-size:1rem;font-weight:700}
+.cue{margin:2px 0 8px;color:var(--muted);font-size:.8rem}
+.stats{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;margin-bottom:8px;font-variant-numeric:tabular-nums}
+.stats span b{font-weight:700;color:var(--accent)}
+.sets{display:flex;gap:6px;flex-wrap:wrap}
+.set{border:1.5px solid var(--line);background:transparent;color:var(--fg);border-radius:999px;padding:4px 11px;font:600 .75rem var(--body);cursor:pointer}
+.set.done{background:var(--sage-soft);border-color:var(--sage);color:var(--sage)}
+.cardio{background:var(--sage-soft);border-radius:12px;padding:14px;margin-bottom:24px}
+.cardio h2{color:var(--sage);margin-top:0}
+table{width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:4px 6px;font-weight:600}
+td{padding:7px 6px;border-top:1px solid var(--line)}
+.tips{font-size:.85rem;color:var(--muted);display:grid;gap:6px;margin:0 0 20px;padding-left:18px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 12px;font:500 .8rem var(--body);cursor:pointer}
+.timer{position:fixed;left:0;right:0;bottom:0;background:var(--fg);color:var(--bg);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px}
+.timer .num{font-family:var(--display);font-size:2rem;font-weight:700;min-width:64px;font-variant-numeric:tabular-nums}
+.timer .lbl{flex:1;min-width:0;font-size:.82rem}
+.timer .bar{height:4px;background:var(--muted);border-radius:2px;margin-top:5px;overflow:hidden}
+.timer .bar i{display:block;height:100%;background:var(--accent);width:100%;transition:width 1s linear}
+.timer button{background:transparent;border:1px solid var(--muted);color:var(--bg);border-radius:8px;padding:6px 10px;font:600 .78rem var(--body);cursor:pointer}
+.vid{display:inline-block;font:600 .75rem var(--body);color:var(--accent);text-decoration:none;margin:2px 0 4px;padding:2px 8px;border:1px solid var(--accent);border-radius:999px}
+.go{width:100%;border:0;background:var(--accent);color:var(--surface);border-radius:12px;padding:14px;font:700 1.05rem var(--body);cursor:pointer;margin:0 0 12px}
+.run{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:56px 16px calc(20px + env(safe-area-inset-bottom,0px));text-align:center}
+.run-top{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;font:600 .85rem var(--body);color:var(--muted)}
+.run-top button{border:1px solid var(--line);background:none;color:var(--muted);border-radius:8px;padding:6px 10px;font:600 .8rem var(--body);cursor:pointer}
+.run-phase{font:700 1rem var(--display);letter-spacing:.1em;padding:4px 14px;border-radius:999px;background:var(--accent);color:var(--surface)}
+.run-name{font:700 1.8rem/1.1 var(--display);max-width:520px;text-wrap:balance}
+.run-reps{color:var(--muted);font-size:.95rem;min-height:1.4em}
+.run-fig svg{width:176px;height:132px;background:var(--surface);border-radius:12px}
+.run-num{font:700 5.5rem/1 var(--display);font-variant-numeric:tabular-nums;color:var(--accent)}
+.run-bar{width:min(420px,100%);height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.run-bar i{display:block;height:100%;width:100%;background:var(--accent)}
+.run[data-ph=switch] .run-phase,.run[data-ph=rest] .run-phase,.run[data-ph=get] .run-phase,.run[data-ph=done] .run-phase,.run[data-ph=switch] .run-bar i,.run[data-ph=rest] .run-bar i,.run[data-ph=get] .run-bar i{background:var(--sage)}
+.run[data-ph=switch] .run-num,.run[data-ph=rest] .run-num,.run[data-ph=get] .run-num,.run[data-ph=done] .run-num{color:var(--sage)}
+.run-next{color:var(--muted);font-size:.9rem;min-height:1.3em}
+.run-ctl{display:flex;gap:10px;margin-top:6px}
+.run-ctl button{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:12px;padding:12px 16px;font:700 .95rem var(--body);cursor:pointer;min-width:60px}
+#rPause{background:var(--fg);color:var(--bg);border-color:var(--fg);min-width:130px}
+@media (max-height:700px){.run-fig svg{width:128px;height:96px}.run-num{font-size:4.2rem}.run-name{font-size:1.5rem}}
+@media (max-width:440px){.ex{grid-template-columns:92px 1fr}.ex svg{width:92px;height:69px}.rule b{font-size:1.15rem}}
+@media (prefers-reduced-motion:reduce){.timer .bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <h1>45-Min Workout Plan</h1>
+  <p class="sub">5 days a week until the 3rd week of November. Every day is a 20-min full-body dumbbell circuit (3 rounds), then a 20-min incline walk. Tap <b>Start timed workout</b> and the timer runs every move, switch and rest for you, with beeps.</p>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="timeline" aria-label="How the 45 minutes are split">
+    <div class="t-warm" style="flex:3">3</div>
+    <div class="t-str" style="flex:20">Circuit 20</div>
+    <div class="t-car" style="flex:20">Walk 20</div>
+    <div class="t-stretch" style="flex:2">2</div>
+  </div>
+  <div class="tl-note"><span style="left:0">0:00</span><span style="left:51.1%">0:23</span><span style="left:100%">0:45</span></div>
+  <p class="cue" style="margin:-12px 0 18px">3 min warm-up · 20 min full-body circuit · 20 min incline walk · 2 min stretch</p>
+
+  <div class="rules">
+    <div class="rule"><b>12 reps</b><span>each move, no pause between reps</span></div>
+    <div class="rule"><b>15 sec</b><span>to switch to the next move</span></div>
+    <div class="rule"><b>60 sec</b><span>rest after each round</span></div>
+  </div>
+
+  <div id="day"></div>
+
+  <ul class="tips">
+    <li><b>Warm-up (3 min):</b> 30 sec each of marching, arm circles, hip circles, bodyweight squats, walking lunges, cat-cow.</li>
+    <li><b>Weight:</b> use one pair of dumbbells for the whole circuit. Start with 3–4 kg each. The last 2–3 reps of each move should feel hard.</li>
+    <li><b>Getting stronger:</b> when all 3 rounds feel easy, go up 1 kg. Adding weight every week or two is what builds strength.</li>
+    <li><b>Alternate-side moves:</b> 12 reps total, switching sides each rep. "Each leg" moves: do all reps on one side, then the other.</li>
+    <li><b>Form first:</b> if your form slips, slow down or drop the weight.</li>
+    <li><b>Stretch (2 min):</b> hamstrings, quads, chest and shoulders, 30 sec each.</li>
+  </ul>
+  <button class="reset" id="reset">Clear this week's ticks</button>
+</div>
+
+<div class="timer" id="timer" hidden>
+  <div class="num" id="tnum">0:45</div>
+  <div class="lbl"><span id="tlbl">Rest</span><div class="bar"><i id="tbar"></i></div></div>
+  <button id="tskip">Skip</button>
+</div>
+
+<div class="run" id="run" hidden role="dialog" aria-label="Guided workout timer">
+  <div class="run-top"><span id="rRound">Round 1 of 3</span><button id="rClose">End workout</button></div>
+  <div class="run-phase" id="rPhase">GET READY</div>
+  <div class="run-name" id="rName"></div>
+  <div class="run-reps" id="rReps"></div>
+  <a class="vid" id="rVid" target="_blank" rel="noopener">▶ Watch demo</a>
+  <div class="run-fig" id="rFig"></div>
+  <div class="run-num" id="rNum" aria-live="off">0:00</div>
+  <div class="run-bar"><i id="rBar"></i></div>
+  <div class="run-next" id="rNext"></div>
+  <div class="run-ctl" id="rCtl"><button id="rPrev" aria-label="Previous">⏮</button><button id="rPause">❚❚ Pause</button><button id="rSkip" aria-label="Skip">⏭</button></div>
+</div>
+
+<script>
+const P = {
+ goblet:{j:{h:[63,22],n:[60,30],hp:[54,57],k1:[72,62],f1:[68,82],e1:[70,42],a1:[68,36]},db:[[68,35]]},
+ rdl:{j:{h:[83,33],n:[75,38],hp:[50,50],k1:[54,66],f1:[52,82],e1:[76,50],a1:[76,63]},db:[[76,64]]},
+ lunge:{j:{h:[58,18],n:[58,27],hp:[58,52],k1:[73,64],f1:[73,82],k2:[46,77],f2:[30,81],e1:[58,41],a1:[58,54]},db:[[58,56]]},
+ bridge:{j:{h:[14,74],n:[24,75],hp:[56,60],k1:[76,56],f1:[80,81],e1:[36,80],a1:[48,80]}},
+ chest:{bench:[[14,66,72,6]],j:{h:[18,57],n:[27,60],hp:[62,61],k1:[80,58],f1:[84,82],e1:[22,48],a1:[28,32]},db:[[28,31]]},
+ row:{bench:[[12,58,44,6]],j:{h:[28,39],n:[36,42],hp:[68,44],k1:[70,63],f1:[71,82],k2:[62,63],f2:[58,82],e1:[32,51],a1:[30,58],e2:[54,34],a2:[50,48]},db:[[50,49]]},
+ press:{j:{h:[60,19],n:[60,28],hp:[60,54],k1:[54,68],f1:[52,82],k2:[66,68],f2:[68,82],e1:[44,24],a1:[46,9],e2:[76,24],a2:[74,9]},db:[[46,8],[74,8]]},
+ plank:{j:{h:[21,58],n:[30,62],hp:[65,66],k1:[81,73],f1:[97,80],e1:[32,80],a1:[44,80]}},
+ thruster:{j:{h:[60,23],n:[60,32],hp:[60,57],k1:[49,66],f1:[50,82],k2:[71,66],f2:[70,82],e1:[45,27],a1:[47,12],e2:[75,27],a2:[73,12]},db:[[47,11],[73,11]]},
+ renegade:{j:{h:[21,49],n:[30,54],hp:[65,60],k1:[81,70],f1:[97,80],e1:[30,67],a1:[30,79],e2:[44,46],a2:[38,62]},db:[[30,79],[38,63]]},
+ stepup:{box:[[60,64,28,18]],j:{h:[58,15],n:[57,24],hp:[55,48],k1:[68,52],f1:[70,64],k2:[52,66],f2:[48,82],e1:[58,36],a1:[58,48]},db:[[58,50]]},
+ deadbug:{j:{h:[18,71],n:[28,72],hp:[60,72],e1:[30,58],a1:[30,44],e2:[16,64],a2:[5,61],k1:[62,52],f1:[77,52],k2:[79,66],f2:[97,69]}},
+ sumo:{j:{h:[60,21],n:[60,30],hp:[60,55],k1:[44,64],f1:[39,82],k2:[76,64],f2:[81,82],e1:[55,44],a1:[60,59],e2:[65,44],a2:[60,59]},db:[[60,62]]},
+ slrdl:{j:{h:[89,41],n:[80,44],hp:[55,49],k1:[55,66],f1:[55,82],k2:[38,48],f2:[21,46],e1:[79,56],a1:[79,67]},db:[[79,68]]},
+ bulgarian:{bench:[[8,60,32,6]],j:{h:[61,21],n:[60,30],hp:[58,54],k1:[74,64],f1:[73,82],k2:[45,74],f2:[32,61],e1:[59,44],a1:[59,56]},db:[[59,58]]},
+ kickback:{j:{h:[23,53],n:[32,58],hp:[66,58],k1:[66,80],f1:[86,80],k2:[84,51],f2:[90,33],e1:[31,69],a1:[30,80]}},
+ incline:{bench:[[56,64,22,6]],incl:[[22,38],[60,66]],j:{h:[25,31],n:[32,39],hp:[58,60],k1:[77,58],f1:[82,82],e1:[28,24],a1:[42,13]},db:[[42,12]]},
+ bentrow:{j:{h:[85,31],n:[77,36],hp:[50,48],k1:[57,64],f1:[54,82],e1:[67,40],a1:[72,53]},db:[[72,54]]},
+ lateral:{j:{h:[60,19],n:[60,28],hp:[60,54],k1:[55,68],f1:[54,82],k2:[65,68],f2:[66,82],e1:[47,32],a1:[35,31],e2:[73,32],a2:[85,31]},db:[[35,31],[85,31]]},
+ twist:{j:{h:[30,39],n:[37,47],hp:[52,74],k1:[69,61],f1:[84,68],e1:[49,52],a1:[58,59]},db:[[58,60]]},
+ sqraise:{j:{h:[60,22],n:[57,30],hp:[50,57],k1:[68,62],f1:[64,82],e1:[72,31],a1:[86,31]},db:[[87,31]]},
+ reach:{j:{h:[30,35],n:[38,40],hp:[53,54],k1:[36,68],f1:[22,82],k2:[70,68],f2:[84,82],e1:[32,56],a1:[26,72],e2:[48,30],a2:[58,20]},db:[[26,73]]},
+ arnoldknee:{j:{h:[60,19],n:[60,28],hp:[60,54],k1:[58,68],f1:[58,82],k2:[74,54],f2:[74,70],e1:[46,24],a1:[48,9],e2:[74,24],a2:[72,9]},db:[[48,8],[72,8]]},
+ squatcurl:{j:{h:[56,24],n:[56,33],hp:[58,58],k1:[40,66],f1:[32,82],k2:[74,64],f2:[80,82],e1:[46,46],a1:[44,34],e2:[66,46],a2:[68,34]},db:[[44,34],[68,34]]},
+ highpull:{j:{h:[62,19],n:[60,28],hp:[58,54],k1:[60,68],f1:[59,82],e1:[48,27],a1:[66,35]},db:[[67,35]]},
+ lungepress:{j:{h:[56,20],n:[57,29],hp:[58,52],k1:[73,64],f1:[73,82],k2:[46,77],f2:[30,81],e1:[70,25],a1:[67,10]},db:[[67,9]]},
+ latlunge:{j:{h:[46,23],n:[46,32],hp:[44,58],k1:[30,68],f1:[24,82],k2:[64,70],f2:[84,82],e1:[38,46],a1:[46,40],e2:[54,46],a2:[46,40]},db:[[46,40]]},
+ stepupress:{box:[[60,64,28,18]],j:{h:[58,15],n:[57,24],hp:[55,48],k1:[68,52],f1:[70,64],k2:[52,66],f2:[48,82],e1:[68,20],a1:[66,6]},db:[[66,5]]}
+};
+const C=(n,pose,reps,cue)=>[n,pose,3,reps,15,cue];
+const NOTE="Do the 6 moves back to back, 12 reps each, with only 15 sec to switch. Rest 60 sec after each round. 3 rounds ≈ 20 min.";
+function fig(key){
+  const p=P[key],j=p.j,L=(a,b)=>j[a]&&j[b]?`<line x1="${j[a][0]}" y1="${j[a][1]}" x2="${j[b][0]}" y2="${j[b][1]}"/>`:'';
+  let s=`<svg viewBox="0 0 104 88" role="img" aria-label="${key} figure"><line x1="2" y1="84" x2="102" y2="84" stroke="var(--prop)" stroke-width="2"/>`;
+  (p.bench||[]).forEach(b=>s+=`<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}" rx="2" fill="var(--prop)"/><rect x="${b[0]+3}" y="${b[1]+b[3]}" width="3" height="${84-b[1]-b[3]}" fill="var(--prop)"/><rect x="${b[0]+b[2]-6}" y="${b[1]+b[3]}" width="3" height="${84-b[1]-b[3]}" fill="var(--prop)"/>`);
+  (p.box||[]).forEach(b=>s+=`<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}" rx="2" fill="var(--prop)"/>`);
+  (p.incl||[]).length&&(s+=`<line x1="${p.incl[0][0]}" y1="${p.incl[0][1]}" x2="${p.incl[1][0]}" y2="${p.incl[1][1]}" stroke="var(--prop)" stroke-width="6" stroke-linecap="round"/>`);
+  s+=`<g stroke="var(--fg)" stroke-width="4" stroke-linecap="round" fill="none">`+L('n','hp')+L('hp','k1')+L('k1','f1')+L('hp','k2')+L('k2','f2')+L('n','e1')+L('e1','a1')+L('n','e2')+L('e2','a2')+`</g>`;
+  s+=`<circle cx="${j.h[0]}" cy="${j.h[1]}" r="6.5" fill="var(--fg)"/>`;
+  (p.db||[]).forEach(d=>s+=`<rect x="${d[0]-7}" y="${d[1]-2.5}" width="14" height="5" rx="1.5" fill="var(--accent)"/><rect x="${d[0]-8}" y="${d[1]-4}" width="3" height="8" rx="1" fill="var(--accent)"/><rect x="${d[0]+5}" y="${d[1]-4}" width="3" height="8" rx="1" fill="var(--accent)"/>`);
+  return s+'</svg>';
+}
+const walk=(mid,note)=>({rows:[["0–3 min","Warm-up walk","4–5%","4.5 km/h"],["3–17 min","Steady climb",mid,"5–5.5 km/h"],["17–20 min","Cool-down","2–3%","4.5 km/h"]],note});
+const DAYS=[
+ {t:"Day 1",s:"Squat & press",focus:"Legs + push",circuit:true,roundRest:60,note:NOTE,ex:[
+  C("Goblet squat to press","thruster","12 reps","Dumbbells at your shoulders, squat down, then drive up and press overhead in one move."),
+  C("Romanian deadlift to bent-over row","bentrow","12 reps","Hinge down with a flat back, row both dumbbells to your ribs, then stand up tall."),
+  C("Reverse lunge with curl","lunge","12 reps (alternate legs)","Step back into the lunge, curl the dumbbells at the bottom, then step forward."),
+  C("Push-up to renegade row","renegade","10 reps","Push-up on the dumbbells (knees down is fine), then row the right, then the left."),
+  C("Sumo squat to upright row","sumo","12 reps","Wide stance, squat, then as you stand pull the dumbbell up to your chest, elbows high."),
+  C("Glute bridge with chest press","bridge","12 reps","Lie on your back, lift your hips and hold, pressing the dumbbells up each rep.")],
+  c:walk("10–12%","Hands off the rails. If you have to hold on, lower the incline.")},
+ {t:"Day 2",s:"Push & pull",focus:"Upper body + legs",circuit:true,roundRest:60,note:NOTE,ex:[
+  C("Squat, curl and press","thruster","12 reps","Curl the dumbbells up, squat with them at your shoulders, then press overhead as you stand."),
+  C("Bent-over row to reverse fly","bentrow","12 reps","Hinge forward, row both dumbbells, lower, then open the arms wide. Row + fly = 1 rep."),
+  C("Lateral lunge with goblet hold","latlunge","12 reps (alternate sides)","Big step to the side, sit back into that hip, keep the other leg straight, push back to centre."),
+  C("Plank row","renegade","12 reps (alternate arms)","High plank on the dumbbells, feet wide, row one side at a time without twisting your hips."),
+  C("Step-up with shoulder press","stepupress","12 reps (alternate legs)","Step up onto the bench and press both dumbbells overhead at the top. Step down slowly."),
+  C("Russian twist","twist","20 (10 each side)","Lean back holding one dumbbell, rotate from the ribs, not the arms.")],
+  c:walk("10–12%","Keep a pace where you can talk in short sentences.")},
+ {t:"Day 3",s:"Burner",focus:"Your reel · full body",circuit:true,roundRest:60,note:"From your reel: do the 6 moves back to back, 12 reps each, with only 15 sec to switch. Rest 60 sec after each round. 3 rounds ≈ 20 min. Use light dumbbells (2–4 kg) and keep moving. <a class='vid' href='https://www.instagram.com/reel/DbZbG8OhPUn/' target='_blank' rel='noopener'>▶ Original reel</a>",ex:[
+  ["Squat with front raise","sqraise",3,"12 reps",15,"Squat down, then as you stand, raise both dumbbells straight out to shoulder height."],
+  ["Wide-stance reach","reach",3,"12 reps (alternate sides)",15,"Feet wide, hinge and reach the dumbbell toward the opposite foot, then stand tall."],
+  ["Arnold press with knee-up","arnoldknee",3,"12 reps (alternate knees)",15,"Press overhead turning the palms out, and drive one knee up at the top."],
+  ["Side-to-side squat with curl","squatcurl",3,"12 reps (alternate sides)",15,"Wide stance, shift your weight into one leg and squat, curl at the bottom, switch sides."],
+  ["Deadlift to upright row","highpull",3,"12 reps",15,"Hinge down with a flat back, stand up, then pull the dumbbells to your chest, elbows high."],
+  ["Reverse lunge with press","lungepress",3,"12 reps (alternate legs)",15,"Step back into a lunge, then push up and press the dumbbells overhead as you stand."]],
+  c:walk("8–10%","The burner gets your heart rate up, so a slightly lower incline is fine today.")},
+ {t:"Day 4",s:"Glutes & back",focus:"Lower body + pull",circuit:true,roundRest:60,note:NOTE,ex:[
+  C("Sumo squat to high pull","sumo","12 reps","Wide stance, toes out, squat, then pull the dumbbell up to your chin as you stand."),
+  C("Single-leg deadlift with row","slrdl","8 each leg","Hinge on one leg, row the dumbbell at the bottom, then stand. Hips stay square."),
+  C("Bulgarian split squat with curl","bulgarian","8 each leg","Back foot on the bench, drop straight down, curl as you come up."),
+  C("Reverse lunge to knee drive","lunge","12 reps (alternate legs)","Dumbbells at your sides. Step back into a lunge, then drive that knee up as you stand."),
+  C("Single-leg glute bridge","bridge","10 each leg","One foot down, other leg up, dumbbell on your hips. Squeeze at the top for 1 sec."),
+  C("Dead bug with dumbbell","deadbug","12 reps (alternate sides)","Hold one dumbbell above your chest, lower back pressed down, extend the opposite leg.")],
+  c:walk("10–12%","Swing your arms. It raises your heart rate without changing speed.")},
+ {t:"Day 5",s:"Total body",focus:"Full-body finisher",circuit:true,roundRest:60,note:NOTE,ex:[
+  C("Dumbbell thruster","thruster","12 reps","Squat with the dumbbells at your shoulders, then drive up and press overhead."),
+  C("Dumbbell swing","rdl","12 reps","One dumbbell in both hands. Hinge back, then snap the hips forward to swing it to chest height."),
+  C("Curtsy lunge with front raise","lunge","12 reps (alternate legs)","Step one leg back and across, lower down, raise the dumbbells to shoulder height as you rise."),
+  C("Renegade row","renegade","10 reps (alternate arms)","High plank on the dumbbells, row one side at a time, hips stay level."),
+  C("Squat to lateral raise","lateral","12 reps","Squat down, then as you stand lift the dumbbells out to the sides to shoulder height."),
+  C("Plank hold","plank","40 sec","Elbows under shoulders, squeeze glutes, straight line from head to heels.")],
+  c:walk("12% (max 15%)","Last session of the week. Push the incline if you feel good.")}
+];
+let cur=0,done={};
+try{cur=+localStorage.getItem('wk_day')||0;done=JSON.parse(localStorage.getItem('wk_done')||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem('wk_day',cur);localStorage.setItem('wk_done',JSON.stringify(done))}catch(e){}};
+const tabs=document.getElementById('tabs');
+DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='tab';b.id='tab'+i;b.setAttribute('role','tab');b.innerHTML=`${d.t}<small>${d.s}</small>`;b.onclick=()=>{cur=i;save();render()};tabs.appendChild(b)});
+function render(){
+  [...tabs.children].forEach((b,i)=>b.setAttribute('aria-selected',i===cur));
+  const d=DAYS[cur];
+  const mins=Math.round(buildSeq(d).reduce((a,s)=>a+s.sec,0)/60);
+  let h=`<h2>${d.s} <em>${d.focus} · ${mins} min</em></h2><button class="go" id="go">▶ Start timed workout · ${mins} min</button><div class="list">`;
+  d.ex.forEach((e,k)=>{
+    const [n,pose,sets,reps,rest,cue]=e;
+    const label=d.circuit?'Round':'Set';
+    let chips='';for(let s=0;s<sets;s++){const id=`${cur}-${k}-${s}`;chips+=`<button class="set${done[id]?' done':''}" data-id="${id}" data-rest="${d.circuit?(k===d.ex.length-1?(d.roundRest||45):rest):rest}" data-n="${n}">${label} ${s+1}${done[id]?' ✓':''}</button>`}
+    const restTxt=d.circuit?`${rest} sec, then next move`:`${rest} sec`;
+    h+=`<div class="ex">${fig(pose)}<div class="ex-body"><h3>${n}</h3><a class="vid" href="${vid(n)}" target="_blank" rel="noopener">▶ Watch demo</a><p class="cue">${cue}</p>
+      <div class="stats"><span><b>${sets}</b> ${d.circuit?'rounds':'sets'}</span><span><b>${reps}</b></span><span>Rest <b>${restTxt}</b></span></div>
+      <div class="sets">${chips}</div></div></div>`;
+  });
+  h+='</div>';
+  if(d.circuit)h=h.replace('<div class="list">','<p class="cue" style="margin-top:-4px">'+(d.note||NOTE)+'</p><div class="list">');
+  h+=`<div class="cardio"><h2>Incline walk <em>20 min · treadmill</em></h2><table><thead><tr><th>Time</th><th>Phase</th><th>Incline</th><th>Speed</th></tr></thead><tbody>${d.c.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="cue" style="margin:10px 0 0">${d.c.note}</p></div>`;
+  document.getElementById('day').innerHTML=h;
+  document.getElementById('go').onclick=startRun;
+  document.querySelectorAll('.set').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.id;done[id]=!done[id];save();render();
+    if(done[id])startRest(+b.dataset.rest,b.dataset.n);
+  });
+}
+let iv=null;const T=document.getElementById('timer'),tn=document.getElementById('tnum'),tb=document.getElementById('tbar'),tl=document.getElementById('tlbl');
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function startRest(sec,name){
+  clearInterval(iv);let left=sec;T.hidden=false;tl.textContent='Rest after '+name;tn.textContent=fmt(left);tb.style.transition='none';tb.style.width='100%';
+  requestAnimationFrame(()=>{tb.style.transition='';});
+  iv=setInterval(()=>{left--;tn.textContent=fmt(Math.max(left,0));tb.style.width=(left/sec*100)+'%';if(left<=0){clearInterval(iv);tl.textContent='Go! Next set';setTimeout(()=>T.hidden=true,2500)}},1000);
+}
+function vid(n){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(n+' dumbbell exercise how to')}
+const sided=r=>/each (leg|arm)/.test(r);
+function workSec(r){const m=r.match(/(\d+)\s*sec/);if(m)return +m[1];return sided(r)?60:45}
+function buildSeq(d){const s=[{ph:'get',k:0,r:0,sec:10}],RN=3,last=d.ex.length-1;for(let r=0;r<RN;r++)d.ex.forEach((e,k)=>{s.push({ph:'work',k,r,sec:workSec(e[3])});if(k<last)s.push({ph:'switch',k:k+1,r,sec:15});else if(r<RN-1)s.push({ph:'rest',k:0,r:r+1,sec:d.roundRest||60})});return s}
+const R=id=>document.getElementById(id);
+let run=null,ac=null,wl=null;
+function beep(f,ms){try{if(!ac)return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.frequency.value=f;o.connect(g);g.connect(ac.destination);g.gain.setValueAtTime(.3,t);g.gain.exponentialRampToValueAtTime(.001,t+ms/1000);o.start(t);o.stop(t+ms/1000)}catch(e){}}
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch(e){wl=null}}
+async function startRun(){
+  clearInterval(iv);T.hidden=true;
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume&&ac.resume()}catch(e){}
+  run={d:DAYS[cur],seq:buildSeq(DAYS[cur]),i:0,left:0,end:0,paused:false,t:null};
+  R('rCtl').hidden=false;R('rVid').hidden=false;R('run').hidden=false;document.body.style.overflow='hidden';
+  enter(0);run.t=setInterval(tick,250);lock();
+}
+function enter(i){
+  if(i>=run.seq.length)return finish();
+  run.i=Math.max(0,i);const s=run.seq[run.i];run.left=s.sec;run.end=Date.now()+s.sec*1000;run.half=false;show();
+  if(s.ph==='work'){beep(880,350);buzz(300)}else if(run.i>0){beep(520,250);buzz([120,80,120])}
+}
+function show(){
+  const {d,seq,i,left}=run,s=seq[i],e=d.ex[s.k],n=d.ex.length,nx=seq[i+1];
+  R('run').dataset.ph=s.ph;
+  R('rRound').textContent=`Round ${s.r+1} of 3`;
+  R('rPhase').textContent={work:`GO · MOVE ${s.k+1} OF ${n}`,switch:'SWITCH · UP NEXT',rest:'ROUND REST · UP NEXT',get:'GET READY'}[s.ph];
+  R('rName').textContent=e[0];
+  R('rReps').textContent=e[3]+(s.ph==='work'&&sided(e[3])?' · switch sides halfway':'');
+  R('rFig').innerHTML=fig(e[1]);R('rVid').href=vid(e[0]);
+  R('rNum').textContent=fmt(left);R('rBar').style.width=(left/s.sec*100)+'%';
+  R('rNext').textContent=s.ph!=='work'?'':!nx?'Last move. Finish strong!':nx.ph==='rest'?`Then 60 sec rest before round ${nx.r+1}`:`Next: ${d.ex[nx.k][0]}`;
+  R('rPause').textContent=run.paused?'▶ Resume':'❚❚ Pause';
+}
+function tick(){
+  if(!run||run.paused||run.fin)return;
+  const s=run.seq[run.i],l=Math.max(0,Math.ceil((run.end-Date.now())/1000));
+  if(l===run.left)return;run.left=l;
+  if(s.ph==='work'&&sided(run.d.ex[s.k][3])&&!run.half&&l<=Math.floor(s.sec/2)&&l>0){run.half=true;beep(660,250);buzz(250);R('rReps').textContent='Switch sides now!'}
+  if(l<=0){if(s.ph==='work'){done[`${cur}-${s.k}-${s.r}`]=true;save()}enter(run.i+1);return}
+  if(l<=3)beep(440,120);
+  R('rNum').textContent=fmt(l);R('rBar').style.width=(l/s.sec*100)+'%';
+}
+function finish(){
+  clearInterval(run.t);run.fin=true;R('run').dataset.ph='done';
+  R('rPhase').textContent='CIRCUIT DONE';R('rName').textContent='Great work!';
+  R('rReps').textContent='Now your 20-min incline walk, then 2 min of stretching.';
+  R('rFig').innerHTML='';R('rNum').textContent='3/3';R('rBar').style.width='0%';R('rNext').textContent='';
+  R('rCtl').hidden=true;R('rVid').hidden=true;R('rClose').textContent='Close';
+  beep(880,200);setTimeout(()=>beep(1175,450),250);buzz([200,100,200]);render();
+}
+function endRun(){if(run)clearInterval(run.t);run=null;R('run').hidden=true;R('rClose').textContent='End workout';document.body.style.overflow='';try{wl&&wl.release()}catch(e){}wl=null;render()}
+R('rClose').onclick=endRun;
+R('rSkip').onclick=()=>run&&!run.fin&&enter(run.i+1);
+R('rPrev').onclick=()=>run&&!run.fin&&enter(run.i-1);
+R('rPause').onclick=()=>{if(!run||run.fin)return;run.paused=!run.paused;if(!run.paused)run.end=Date.now()+run.left*1000;show()};
+document.addEventListener('visibilitychange',()=>{if(run&&!run.fin&&document.visibilityState==='visible')lock()});
+document.getElementById('tskip').onclick=()=>{clearInterval(iv);T.hidden=true};
+document.getElementById('reset').onclick=()=>{done={};save();render()};
+render();
+</script>
+
+
+</body></html>
